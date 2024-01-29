@@ -1,7 +1,4 @@
-﻿
-using System.Runtime.CompilerServices;
-
-namespace SuggestionAppLibrary.Models;
+﻿namespace SuggestionAppLibrary.Models;
 
 public class BasicUserModel
 {

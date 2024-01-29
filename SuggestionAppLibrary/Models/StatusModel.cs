@@ -1,6 +1,4 @@
-﻿using ThirdParty.BouncyCastle.Utilities.IO.Pem;
-
-namespace SuggestionAppLibrary.Models;
+﻿namespace SuggestionAppLibrary.Models;
 
 public class StatusModel
 {

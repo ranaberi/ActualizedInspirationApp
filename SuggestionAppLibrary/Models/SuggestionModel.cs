@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-
-namespace SuggestionAppLibrary.Models;
+﻿namespace SuggestionAppLibrary.Models;
 
 public class SuggestionModel
 {
