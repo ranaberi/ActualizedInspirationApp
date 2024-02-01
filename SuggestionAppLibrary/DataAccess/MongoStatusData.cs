@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 
 namespace SuggestionAppLibrary.DataAccess;
 
@@ -15,6 +13,12 @@ public class MongoStatusData : IStatusData
         _cache = cache;
         _statuses = db.StatusCollection;
     }
+
+    /// <summary>
+    /// Retreives the statuses from the database if cache is empty and cache it for one day.
+    /// Else it retrieves the statuses from the cache.
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<StatusModel>> GetAllStatuses()
     {
         var output = _cache.Get<List<StatusModel>>(cacheName);
@@ -27,6 +31,11 @@ public class MongoStatusData : IStatusData
         }
         return output;
     }
+    /// <summary>
+    /// Creates a status
+    /// </summary>
+    /// <param name="status"></param>
+    /// <returns></returns>
     public Task CreateStatus(StatusModel status)
     {
         return _statuses.InsertOneAsync(status);
