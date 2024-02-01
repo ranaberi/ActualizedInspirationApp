@@ -6,7 +6,7 @@ public class MongoCategoryData : ICategoryData
 {
     private readonly IMongoCollection<CategoryModel> _categories;
     private readonly IMemoryCache _cache;
-    private const string cacheName = "CategoryData";
+    private const string CacheName = "CategoryData";
 
     //The category data won't change that often, so we cache it for a long time
     public MongoCategoryData(IDBConnection db, IMemoryCache cache)
@@ -15,18 +15,18 @@ public class MongoCategoryData : ICategoryData
         _categories = db.CategoryCollection;
     }
     /// <summary>
-    /// Retrieves from the cache by key cacheName a list of CategoryModel
+    /// Retrieves from the cache by key CacheName a list of CategoryModel
     /// Since the first time we don't have a cache yet, we retrieve the data from the database then we put it in the cache for one day.
     /// </summary>
     /// <returns></returns>
     public async Task<List<CategoryModel>> GetAllCategories()
     {
-        var output = _cache.Get<List<CategoryModel>>(cacheName);
+        var output = _cache.Get<List<CategoryModel>>(CacheName);
         if (output is null)
         {
             var results = await _categories.FindAsync(_ => true);
             output = results.ToList();
-            _cache.Set(cacheName, output, TimeSpan.FromDays(1));
+            _cache.Set(CacheName, output, TimeSpan.FromDays(1));
         }
         return output;
 
