@@ -1,15 +1,11 @@
-//using SuggestionAppUI;
+using SuggestionAppUI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SuggestionAppUI;
 using SuggestionAppUI.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRazorComponents()
-            .AddInteractiveServerComponents();
-builder.Services.AddMemoryCache();
 builder.ConfigureServices();
 
 var app = builder.Build();
