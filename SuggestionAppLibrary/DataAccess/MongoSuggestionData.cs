@@ -70,7 +70,7 @@ public class MongoSuggestionData : ISuggestionData
         return output.Where(x => x.ApprovedForRelease == false && x.Rejected == false).ToList();
     }
     /// <summary>
-    /// 
+    /// Replace the old suggestion by the new one and removes the old cached suggestion.
     /// </summary>
     /// <param name="suggestion"></param>
     /// <returns></returns>
@@ -80,25 +80,40 @@ public class MongoSuggestionData : ISuggestionData
         _cache.Remove(CacheName);
     }
 
+    /// <summary>
+    /// Upvoting a suggestion
+    /// </summary>
+    /// <param name="suggestionId"> the unique identifier of the suggestion to upvote</param>
+    /// <param name="userId"> the unique identifier of the user doing the upvoting</param>
+    /// <returns></returns>
     public async Task UpvoteSuggestion(string suggestionId, string userId)
     {
+        //creates a transaction to make sure when we write to two different collections, it is either succeded or failed and update the user and the suggestion
         var client = _db.Client;
         using var session = await client.StartSessionAsync();
 
         session.StartTransaction();
         try
         {
+            //exposing the database name to connect to it. The databse crerated using this client that is using this session
             var db = client.GetDatabase(_db.DbName);
             var suggestionsInTransaction = db.GetCollection<SuggestionModel>(_db.SuggestionCollectionName);
+
+            //If we don't find the suggestion we are looking for we throw an exception (so we use First() instead of FirstOrDefault())
             var suggestion = (await suggestionsInTransaction.FindAsync(s => s.Id == suggestionId)).First();
 
+            //In the HasheSet of the userVotes which does not allow duplicate entries, Add() tries to add the item
+            //itemAdded ? true : false
             bool isUpvote = suggestion.UserVotes.Add(userId);
 
+            // if isUpVote is false means we already upVoted once so we remove the upvote.
+            // In the UI, the upvaote arrow once clicked again (after being upvoted) we remove the upvote
             if (isUpvote == false)
             {
                 suggestion.UserVotes.Remove(userId);
             }
 
+            //after updating the user votes column, the sugeestion gets updated with the new version just changed
             await suggestionsInTransaction.ReplaceOneAsync(s => s.Id == suggestionId, suggestion);
             var userInTransaction = db.GetCollection<UserModel>(_db.UserCollectionName);
             var user = await _userData.GetUser(suggestion.Author.Id);
@@ -110,12 +125,13 @@ public class MongoSuggestionData : ISuggestionData
             else
             {
                 var suggestionToRemove = user.VotedOnSuggestions.Where(s => s.Id == suggestionId).First();
-                user.VotedOnSuggestions.Remove(new BasicSuggestionModel(suggestion));
+                user.VotedOnSuggestions.Remove(suggestionToRemove);
             }
             await userInTransaction.ReplaceOneAsync(u => u.Id == userId, user);
             await session.CommitTransactionAsync();
             _cache.Remove(CacheName);
         }
+        //logging to be added
         catch (Exception ex)
         {
             await session.AbortTransactionAsync();
@@ -123,6 +139,12 @@ public class MongoSuggestionData : ISuggestionData
         }
     }
 
+    /// <summary>
+    /// Creating a new suggestion.
+    /// Transaction created to enable the user to update his account.
+    /// </summary>
+    /// <param name="suggestion"></param>
+    /// <returns></returns>
     public async Task CreateSuggestion(SuggestionModel suggestion)
     {
         var client = _db.Client;
