@@ -18,7 +18,7 @@ public static class RegisterServices
         //AddSingleton used same as DBConnection, instead of AddTransient which creates new instance every time there is a call.
         //Because CategoryData has access to the cache and collection which are not unique and can be shared accross users
         //All the ones below rely on DBConnection and MemoryCache
-        builder.Services.AddTransient<ICategoryData, MongoCategoryData>();
+        builder.Services.AddSingleton<ICategoryData, MongoCategoryData>();
         builder.Services.AddSingleton<IStatusData, MongoStatusData>();
         builder.Services.AddSingleton<IUserData, MongoUserData>();
         builder.Services.AddSingleton<ISuggestionData, MongoSuggestionData>();

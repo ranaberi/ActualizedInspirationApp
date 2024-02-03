@@ -1,9 +1,10 @@
 ﻿@page "/SampleData"
 @inject ICategoryData categoryData
 @inject IStatusData statusData
+@rendermode  InteractiveServer
 
 
-<h3>SampleData</h3>
+<h3>Sample Data</h3>
 
 @if (categoriesCreated)
 {
@@ -34,7 +35,7 @@ else
 
     /// <summary>
     /// Categories hard-coded for version1 of the app.
-    /// To-do : allow admins to crreate, update, delete categories
+    /// To-do : allow admins to create, update, delete categories
     /// </summary>
     /// <returns></returns>
     private async Task CreateCategories()

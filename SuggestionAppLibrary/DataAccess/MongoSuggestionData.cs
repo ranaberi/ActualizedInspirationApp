@@ -141,7 +141,7 @@ public class MongoSuggestionData : ISuggestionData
 
     /// <summary>
     /// Creating a new suggestion.
-    /// Transaction created to enable the user to update his account.
+    /// Transaction created to enable the user to update his account. It is important to mention that transactions are available only for (non-local) clusters
     /// </summary>
     /// <param name="suggestion"></param>
     /// <returns></returns>
