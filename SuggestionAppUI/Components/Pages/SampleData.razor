@@ -1,6 +1,8 @@
 ﻿@page "/SampleData"
 @inject ICategoryData categoryData
 @inject IStatusData statusData
+@inject IUserData userData
+@inject ISuggestionData suggestionData
 @rendermode  InteractiveServer
 
 
@@ -23,6 +25,7 @@ else
 {
     <button class="btn btn-primary" @onclick="CreateStatuses">Create Statuses</button>
 }
+<button class="btn btn-danger" @onclick="GenerateSampleData">Generate Sample Data</button>
 
 
 
@@ -32,6 +35,69 @@ else
 
     private bool categoriesCreated = false;
     private bool statusesCreated = false;
+
+    private async Task GenerateSampleData()
+    {
+        UserModel user = new()
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                EmailAddress = "john@test.com",
+                DisplayName = "JohnDoe",
+                ObjectIdentifier = "1234"
+            };
+        await userData.CreateUser(user);
+        var foundUser = await userData.GetUserFromAuthentication("1234");
+        var categories = await categoryData.GetAllCategories();
+        var statuses = await statusData.GetAllStatuses();
+        HashSet<string> votes = new();
+        votes.Add("1234");
+        votes.Add("2");
+        votes.Add("3");
+        votes.Add("4");
+
+        SuggestionModel suggestion = new()
+            {
+                Author = new BasicUserModel(foundUser),
+                Category = categories[0],
+                Suggestion = "First suggestion",
+                Description = "This is the first suggestion created by the sample data geneartion method",
+                UserVotes = votes,
+            };
+            await suggestionData.CreateSuggestion(suggestion);
+            votes.Add("5");
+        suggestion =new()
+            {
+                Author = new BasicUserModel(foundUser),
+                Category = categories[0],
+                Suggestion = "Second suggestion",
+                Description = "This is the second suggestion created by the sample data geneartion method",
+                SuggestionStatus = statuses[0],
+                UserVotes = votes,
+                OwnerNotes = "This is a note for the owner"
+            };
+        await suggestionData.CreateSuggestion(suggestion);
+        suggestion = new()
+            {
+                Author = new BasicUserModel(foundUser),
+                Category = categories[2],
+                Suggestion = "Third suggestion",
+                Description = "This is the third suggestion created by the sample data geneartion method",
+                SuggestionStatus = statuses[1],
+                OwnerNotes = "This is a note for the owner"
+            };
+        await suggestionData.CreateSuggestion(suggestion);
+        suggestion = new()
+            {
+                Author = new BasicUserModel(foundUser),
+                Category = categories[5],
+                Suggestion = "Fourth suggestion",
+                Description = "This is the fourth suggestion created by the sample data geneartion method",
+                SuggestionStatus = statuses[3],
+                OwnerNotes = "This is a note for the owner"
+            };
+        await suggestionData.CreateSuggestion(suggestion);
+    }
 
     /// <summary>
     /// Categories hard-coded for version1 of the app.
