@@ -5,7 +5,73 @@
 @inject ISuggestionData SuggestionData
 @inject NavigationManager NavigationManager // This is used to redirect to another page
 @inject ProtectedSessionStorage ProtectedSessionStorage // This is used to store the user's preferred filters
+@rendermode InteractiveServer
 
+<h1>Content Review Suggestions</h1>
+<div>
+    <button>Suggest</button>
+</div>
+<div>
+    <div>@suggestions?.Count Suggestions</div>
+    <div>
+        <button @onclick="(()=> OrderByNew(true))">New</button>
+        <button @onclick="(()=> OrderByNew(false))">Popular</button>
+    </div>
+    <div>
+        
+        @*OnSearchInput will be called everytime a character is typed*@
+        <input type="text" placeholder="Search" aria-label="Search box" @oninput="((txt)=> OnSearchInput((string)txt.Value))"/>
+    </div>
+    <div>
+        @*Virtualize is blazor keyword to avoid paging. it allows infinte scrolling but renders only the data visible on the page.
+        Context for the variable name. OverscanCount for the extra elements to be renderd*@
+        @if(suggestions is not null)
+        {
+            <Virtualize Items="@suggestions" Context="s" OverscanCount="10">
+            <div>
+                <div>
+                    <div>@GetUpvoteTopText(s)</div>
+                        <span class="oi oi-caret-top"></span>
+                    <div>@GetUpvoteBottomText(s)</div>
+                </div>
+                <div>
+                    <div @onclick="(()=> OpenDetails(s))">@s.Suggestion</div>
+                    <div>
+                        <div @onclick="(()=> OpenDetails(s))">@s.Category?.CategoryName</div>
+                    </div>
+                </div>
+                <div>
+                    <div>@s.SuggestionStatus?.StatusName</div>
+                </div>
+            </div>
+            </Virtualize>
+        }
+    </div>
+    <div>
+        @if(categories is not null)
+        {
+            <div>
+                <span>Category</span>
+                <div @onclick="(()=> OnCategoryClick())">All</div>
+                @foreach(var c in categories)
+                {
+                    <div @onclick="(()=> OnCategoryClick(c.CategoryName))">@c.CategoryName</div>
+                }
+            </div>
+        }
+        @if(statuses is not null)
+        {
+            <div>
+                <span>Status</span>
+                <div @onclick="(()=> OnCategoryClick())">All</div>
+                @foreach (var s in statuses)
+                {
+                    <div @onclick="(()=> OnCategoryClick(s.StatusName))">@s.StatusName</div>
+                }
+            </div>
+        }
+    </div>
+</div>
 @code{
     private List<SuggestionModel> suggestions;
     private List<CategoryModel> categories;
