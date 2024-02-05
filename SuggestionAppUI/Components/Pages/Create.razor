@@ -7,7 +7,7 @@
 @rendermode InteractiveServer
 
 
-<h1>Make a Suggsetion</h1>
+<h1>Make a Suggestion</h1>
 <div>
     <div>
         <div>
@@ -15,6 +15,10 @@
         </div>
         @if(categories is not null)
         {
+            @*
+                DataAnnotationsValidator checks the validation requirements in the CreateSuggestionModel.
+                If there is an error in the validation, ValidationSummary will display the validation error
+            *@
             <EditForm Model="suggestion" OnValidSubmit="CreateSuggestion">
                 <DataAnnotationsValidator/>
                 <ValidationSummary/>
@@ -23,6 +27,7 @@
                     <div>Mention the book and how it inspired you</div>
                     <InputText id="suggestion-text" @bind-Value="suggestion.Suggestion"/>
                 </div>
+
                 <div>
                     <label for="category">Category</label>
                     <div>Choose one category</div>
@@ -42,7 +47,7 @@
                 <div>
                     <label for="description">Description</label>
                     <div>Briefly describe your suggestion</div>
-                    <InputText id="description" @bind-Value="suggestion.Description" />
+                    <InputTextArea id="description" @bind-Value="suggestion.Description" />
                 </div>
                 <button type="submit">Suggest</button>
 
@@ -54,4 +59,3 @@
         }
     </div>
 </div>
-

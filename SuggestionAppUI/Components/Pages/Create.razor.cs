@@ -23,7 +23,7 @@ namespace SuggestionAppUI.Components.Pages
         }
 
         /// <summary>
-        /// Translating the CreateSuggestionModel to a SuggestionModel
+        /// Translating the CreateSuggestionModel to a SuggestionModel by manually mapping it.
         /// </summary>
         /// <returns></returns>
         private async Task CreateSuggestion()
@@ -32,15 +32,18 @@ namespace SuggestionAppUI.Components.Pages
             s.Suggestion = suggestion.Suggestion;
             s.Description = suggestion.Description;
             s.Author = new BasicUserModel(loggedInUser);
+
+            //Finds the category matching the selected option.
             s.Category = categories.Where(c => c.Id == suggestion.CategoryId).FirstOrDefault();
-            //if no entry is found
+
+            //If no entry is found
             if (s.Category is null)
             {
                 suggestion.CategoryId = "";
                 return;
             }
             await suggestionData.CreateSuggestion(s);
-            //re-institiating the suggestion just in case
+            //Re-institiating the suggestion just in case
             suggestion = new();
             ClosePage();
         }

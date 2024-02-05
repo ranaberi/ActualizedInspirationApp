@@ -3,8 +3,10 @@
 @inject IUserData userData
 @inject NavigationManager navManager
 
+@*Here all the suggestions made by the logged user are visible*@
 
 <h1>My Profile</h1>
+
 <div>
     <div>
         <button @onclick="ClosePage"></button>
@@ -19,6 +21,7 @@
         </a>
     </p>
 </div>
+
 @if( approved?.Count> 0)
 {
     <div>

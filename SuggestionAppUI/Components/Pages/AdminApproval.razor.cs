@@ -12,11 +12,19 @@ namespace SuggestionAppUI.Components.Pages
         private string currentEditingDescription = "";
         private string editedDescription;
 
+        /// <summary>
+        /// Loads pending suggestions
+        /// </summary>
+        /// <returns></returns>
         protected async override Task OnInitializedAsync()
         {
             submissions = await suggestionData.GetAllSuggestionsWaitingForApproval();
         }
-
+        /// <summary>
+        /// After approving the suggestion, it gets removed from the submissions list (pending suggestions)
+        /// </summary>
+        /// <param name="submission"></param>
+        /// <returns></returns>
         private async Task ApproveSubmission(SuggestionModel submission)
         {
             submission.ApprovedForRelease = true;
@@ -30,7 +38,11 @@ namespace SuggestionAppUI.Components.Pages
             submissions.Remove(submission);
             await suggestionData.UpdateSuggestion(submission);
         }
-
+        /// <summary>
+        /// Enables the editing of the model in text area after being clicked. 
+        /// assignes the new suggestion model (editingModel) to the model in the text area
+        /// </summary>
+        /// <param name="model"></param>
         private void EditTitle(SuggestionModel model)
         {
             editingModel = model;
@@ -38,14 +50,20 @@ namespace SuggestionAppUI.Components.Pages
             currentEditingTitle = model.Id;
             currentEditingDescription = "";
         }
+        /// <summary>
+        /// Close out the field that was being edited. Update the model with the new title and send it to the database.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         private async Task SaveTitle(SuggestionModel model)
         {
+            //In order to close the title section in the form
             currentEditingTitle = string.Empty;
             model.Suggestion = editedTitle;
             await suggestionData.UpdateSuggestion(model);
         }
 
-        private void EditSuggestion(SuggestionModel model)
+        private void EditDescription(SuggestionModel model)
         {
             editingModel = model;
             editedDescription = model.Description;

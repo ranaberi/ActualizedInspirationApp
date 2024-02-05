@@ -21,7 +21,7 @@ public class MongoSuggestionData : ISuggestionData
         _suggestions = db.SuggestionCollection;
     }
     /// <summary>
-    /// Retrieves the suggestions from the databse then cache it for one minute for the first time
+    /// Retrieves the suggestions (except the archived ones) from the databse then cache it for one minute for the first time
     /// If cache found it retrieves the suggestions from it
     /// </summary>
     /// <returns></returns>
@@ -37,6 +37,13 @@ public class MongoSuggestionData : ISuggestionData
         return output;
     }
 
+    /// <summary>
+    /// Retrieves the suggestions based on the author Id
+    /// cached for a minute in case the users comes back to the profile page multiple times.
+    /// better than reloadig the usggestions over and over
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task<List<SuggestionModel>> GetUserSuggestions(string userId)
     {
         var output = _cache.Get<List<SuggestionModel>>(userId);

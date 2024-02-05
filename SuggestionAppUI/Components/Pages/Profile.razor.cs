@@ -13,12 +13,17 @@ namespace SuggestionAppUI.Components.Pages
         private List<SuggestionModel> pending;
         private List<SuggestionModel> rejected;
 
+        /// <summary>
+        /// Loads the approved, archived, pending, and rejected suggestions made by the logged user.
+        /// </summary>
+        /// <returns></returns>
         protected async override Task OnInitializedAsync()
         {
             //TODO - Replace with user lookup
             loggedInUser = await userData.GetUserFromAuthentication("1234");
 
             var results = await suggestionData.GetUserSuggestions(loggedInUser.Id);
+
             if (loggedInUser is not null && results is not null)
             {
                 submissions = results.OrderByDescending(s => s.DateCreated).ToList();

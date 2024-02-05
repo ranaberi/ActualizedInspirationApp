@@ -3,6 +3,8 @@
 @inject IUserData userData
 @inject NavigationManager navManager
 
+@*Here admins can approve or reject the new suggestions*@
+
 <h1>Pending Submissions</h1>
 <div>
     <div>@submissions?.Count Submissions</div>
@@ -27,10 +29,10 @@
                         <EditForm Model="@editedTitle" OnSubmit="(() => SaveTitle(s))">
                             <InputText @bind-Value="editedTitle"></InputText>
                             <button type="submit">
-                                <span class="oi oi-check"></span>
+                                <span class="fas fa-check-double"></span>
                             </button>
                             <button @onclick="(()=> currentEditingTitle = string.Empty)">
-                                <span class="oi oi-x"></span>
+                                <span class="fas fa-lightbulb"></span>
                             </button>
                             
                         </EditForm>
@@ -38,7 +40,7 @@
                     else
                     {
                         @s.Suggestion
-                        <span class="oi po-pencil" @onclick="(()=> EditTitle(s))"></span>
+                        <span class="fas fa-pen" @onclick="(()=> EditTitle(s))"></span>
                     }
                 </div>
                 <div>
@@ -53,16 +55,18 @@
                         <EditForm Model="@editedDescription" OnSubmit="(() => SaveDescription(s))">
                             <InputText @bind-Value="editedDescription"/>
                             <button type="submit">
-                                <span class="oi oi-check"></span>
+                                <span class="fas fa-pen"></span>
                             </button>
                             <button @onclick="(()=> currentEditingDescription = string.Empty)">
-                                <span class="oi oi-x"></span>
+                                <span class="fas fa-check-double"></span>
 
                             </button>
-
-
-
                         </EditForm>
+                    }
+                    else
+                    {
+                        @s.Description
+                        <span class="fas fa-pen"  @onclick="(() => EditDescription(s))"></span>
                     }
                 </div>
             </div>
