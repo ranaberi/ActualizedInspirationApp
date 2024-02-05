@@ -1,4 +1,4 @@
-Actualized Inspiration App is suggestion site based on books read by the users.
+Actualized Inspiration App is a suggestion site based on books read by the users.
 The idea behind the first version of the site is to create a space for users to suggest either an activity or content to be created based on a book that they have read.
 Only authenticated users can post a suggestion.
 Suggestions are categorized in books categories.
