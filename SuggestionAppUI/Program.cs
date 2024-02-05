@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SuggestionAppUI.Components;
+using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,14 @@ app.UseAntiforgery();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRewriter(new RewriteOptions().Add(
+    context =>
+    {
+        if (context.HttpContext.Request.Path == "/MicrosoftIdentity/Account/SignedOut")
+        {
+            context.HttpContext.Response.Redirect("/");
+        }
+    }));
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
