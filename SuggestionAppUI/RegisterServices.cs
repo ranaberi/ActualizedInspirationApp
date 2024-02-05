@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Identity.Web;
 
 namespace SuggestionAppUI;
 
@@ -11,6 +13,7 @@ public static class RegisterServices
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
         builder.Services.AddMemoryCache();
+        builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd2BC"));
 
         //the DBConnection which has the connection to the mongo database as a singleton
         //One database connection for everybody to use instead of AddScoped which is a singleton per user
