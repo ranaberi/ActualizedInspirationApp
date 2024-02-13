@@ -10,7 +10,7 @@ namespace SuggestionAppUI.Components.Pages
         private string currentEditingTitle = "";
         private string editedTitle = "";
         private string currentEditingDescription = "";
-        private string editedDescription;
+        private string editedDescription = "";
 
         /// <summary>
         /// Loads pending suggestions
@@ -20,6 +20,7 @@ namespace SuggestionAppUI.Components.Pages
         {
             submissions = await suggestionData.GetAllSuggestionsWaitingForApproval();
         }
+
         /// <summary>
         /// After approving the suggestion, it gets removed from the submissions list (pending suggestions)
         /// </summary>
@@ -38,6 +39,7 @@ namespace SuggestionAppUI.Components.Pages
             submissions.Remove(submission);
             await suggestionData.UpdateSuggestion(submission);
         }
+
         /// <summary>
         /// Enables the editing of the model in text area after being clicked. 
         /// assignes the new suggestion model (editingModel) to the model in the text area
@@ -49,6 +51,7 @@ namespace SuggestionAppUI.Components.Pages
             editedTitle = model.Suggestion;
             currentEditingTitle = model.Id;
             currentEditingDescription = "";
+            StateHasChanged();
         }
         /// <summary>
         /// Close out the field that was being edited. Update the model with the new title and send it to the database.
@@ -69,6 +72,7 @@ namespace SuggestionAppUI.Components.Pages
             editedDescription = model.Description;
             currentEditingTitle = "";
             currentEditingDescription = model.Id;
+            StateHasChanged();
         }
 
         private async Task SaveDescription(SuggestionModel model)
