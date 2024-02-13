@@ -22,7 +22,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-app.UseAntiforgery();
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -38,4 +38,6 @@ app.UseRewriter(new RewriteOptions().Add(
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
+app.MapControllers();
+app.UseAntiforgery();
 app.Run();

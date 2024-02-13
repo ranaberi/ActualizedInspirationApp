@@ -1,5 +1,7 @@
 ﻿@page "/Create"
+@attribute [Authorize]
 @using SuggestionAppUI.Models
+@inject AuthenticationStateProvider authProvider
 @inject ICategoryData categoryData
 @inject ISuggestionData suggestionData
 @inject NavigationManager navManager
