@@ -1,7 +1,6 @@
 using SuggestionAppUI.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace SuggestionAppUI.Components.Pages
@@ -15,10 +14,7 @@ namespace SuggestionAppUI.Components.Pages
         protected async override Task OnInitializedAsync()
         {
             categories = await categoryData.GetAllCategories();
-
-            var authState = await authProvider.GetAuthenticationStateAsync();
-            string objectId = authState.User.Claims.FirstOrDefault(c => c.Type.Contains("objectidentifier"))?.Value;
-            loggedInUser = await userData.GetUserFromAuthentication(objectId);
+            loggedInUser = await authProvider.GetUserFromAuth(userData);
 
         }
         private void ClosePage()

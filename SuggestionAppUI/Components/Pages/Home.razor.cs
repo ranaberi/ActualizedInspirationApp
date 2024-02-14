@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using SuggestionAppLibrary.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace SuggestionAppUI.Components.Pages
 {
     public partial class Home
     {
+        private UserModel loggedInUser;
         private List<SuggestionModel> suggestions;
         private List<CategoryModel> categories;
         private List<StatusModel> statuses;
@@ -27,8 +29,14 @@ namespace SuggestionAppUI.Components.Pages
         {
             categories = await CategoryData.GetAllCategories();
             statuses = await StatusData.GetAllStatuses();
+            await LoadAndVerifyUser();
         }
 
+        private async Task LoadAndVerifyUser()
+        {
+            var authState = await authProvider.GetAuthenticationStateAsync();
+            string objectId = authState.User.Claims.FirstOrDefault(c => c.Type.Contains("objectidentifier"))?.Value;
+        }
         /// <summary>
         /// Runs after the page is rendered
         /// </summary>

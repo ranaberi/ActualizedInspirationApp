@@ -2,3 +2,4 @@
 global using SuggestionAppLibrary.Models;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Components.Authorization;
+global using SuggestionAppUI.Helpers;

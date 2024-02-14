@@ -19,8 +19,7 @@ namespace SuggestionAppUI.Components.Pages
         /// <returns></returns>
         protected async override Task OnInitializedAsync()
         {
-            //TODO - Replace with user lookup
-            loggedInUser = await userData.GetUserFromAuthentication("1234");
+            loggedInUser = await authProvider.GetUserFromAuth(userData);
 
             var results = await suggestionData.GetUserSuggestions(loggedInUser.Id);
 
