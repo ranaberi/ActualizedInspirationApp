@@ -1,6 +1,8 @@
 ﻿@page "/Details/{Id}"
 @inject ISuggestionData suggestionData
-@inject NavigationManager navManager
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider authProvider
+@inject IUserData UserData
 @rendermode InteractiveServer
 
 <h1>Suggestion Details</h1>
@@ -10,7 +12,7 @@
         {
             <div>
                 <div>
-                    <div>
+                    <div @onclick= "VoteUp" >
                         <div>@GetUpvoteTopText()</div>
                         <span class="oi oi-caret-top"></span>
                         <div>@GetUpvoteBottomText()</div>

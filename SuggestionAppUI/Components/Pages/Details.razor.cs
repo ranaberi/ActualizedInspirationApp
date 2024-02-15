@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components;
+using SuggestionAppLibrary.DataAccess;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,14 +12,16 @@ namespace SuggestionAppUI.Components.Pages
         [Parameter]
         public string Id { get; set; }
         private SuggestionModel suggestion;
+        private UserModel loggedInUser;
 
         protected async override Task OnInitializedAsync()
         {
             suggestion = await suggestionData.GetSuggestion(Id);
+            loggedInUser = await authProvider.GetUserFromAuth(UserData);
         }
         private void ClosePage()
         {
-            navManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/");
         }
 
         /// <summary>
@@ -33,7 +36,14 @@ namespace SuggestionAppUI.Components.Pages
             }
             else
             {
-                return "Click To";
+                if (suggestion.Author.Id == loggedInUser?.Id)
+                {
+                    return "Awaiting";
+                }
+                else
+                {
+                    return "Click To";
+                }
             }
         }
 
@@ -50,6 +60,27 @@ namespace SuggestionAppUI.Components.Pages
             else
             {
                 return "Upvote";
+            }
+        }
+
+        private async Task VoteUp()
+        {
+            if (loggedInUser is not null)
+            {
+                if (suggestion.Author.Id == loggedInUser.Id)
+                {
+                    //Can't vote on your own suggestion
+                    return;
+                }
+                if (suggestion.UserVotes.Add(loggedInUser.Id) == false)
+                {
+                    suggestion.UserVotes.Remove(loggedInUser.Id);
+                }
+                await suggestionData.UpvoteSuggestion(suggestion.Id, loggedInUser.Id);
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
             }
         }
     }

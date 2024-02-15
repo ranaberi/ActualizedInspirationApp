@@ -134,9 +134,9 @@ public class MongoSuggestionData : ISuggestionData
             }
 
             //after updating the user votes column, the sugeestion gets updated with the new version just changed
-            await suggestionsInTransaction.ReplaceOneAsync(s => s.Id == suggestionId, suggestion);
+            await suggestionsInTransaction.ReplaceOneAsync(session, s => s.Id == suggestionId, suggestion);
             var userInTransaction = db.GetCollection<UserModel>(_db.UserCollectionName);
-            var user = await _userData.GetUser(suggestion.Author.Id);
+            var user = await _userData.GetUser(userId);
 
             if (isUpvote)
             {
@@ -147,7 +147,7 @@ public class MongoSuggestionData : ISuggestionData
                 var suggestionToRemove = user.VotedOnSuggestions.Where(s => s.Id == suggestionId).First();
                 user.VotedOnSuggestions.Remove(suggestionToRemove);
             }
-            await userInTransaction.ReplaceOneAsync(u => u.Id == userId, user);
+            await userInTransaction.ReplaceOneAsync(session, u => u.Id == userId, user);
             await session.CommitTransactionAsync();
             _cache.Remove(CacheName);
         }
@@ -174,12 +174,12 @@ public class MongoSuggestionData : ISuggestionData
         {
             var db = client.GetDatabase(_db.DbName);
             var suggestionsInTransaction = db.GetCollection<SuggestionModel>(_db.SuggestionCollectionName);
-            await suggestionsInTransaction.InsertOneAsync(suggestion);
+            await suggestionsInTransaction.InsertOneAsync(session, suggestion);
 
             var usersInTransaction = db.GetCollection<UserModel>(_db.UserCollectionName);
             var user = await _userData.GetUser(suggestion.Author.Id);
             user.AuthoredSuggestions.Add(new BasicSuggestionModel(suggestion));
-            await usersInTransaction.ReplaceOneAsync(u => u.Id == user.Id, user);
+            await usersInTransaction.ReplaceOneAsync(session, u => u.Id == user.Id, user);
 
             await session.CommitTransactionAsync();
         }

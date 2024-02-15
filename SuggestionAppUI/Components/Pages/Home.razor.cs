@@ -36,6 +36,55 @@ namespace SuggestionAppUI.Components.Pages
         {
             var authState = await authProvider.GetAuthenticationStateAsync();
             string objectId = authState.User.Claims.FirstOrDefault(c => c.Type.Contains("objectidentifier"))?.Value;
+
+            if(string.IsNullOrWhiteSpace(objectId)== false)
+            {
+                loggedInUser = await UserData.GetUserFromAuthentication(objectId) ?? new();
+
+                string firstName = authState.User.Claims.FirstOrDefault(c => c.Type.Contains("givenname"))?.Value;
+                string lastName = authState.User.Claims.FirstOrDefault(c => c.Type.Contains("surname"))?.Value;
+                string displayName = authState.User.Claims.FirstOrDefault(c => c.Type.Equals("name"))?.Value;
+                string email = authState.User.Claims.FirstOrDefault(c => c.Type.Contains("email"))?.Value;
+
+                bool isDirty = false;
+
+                if(objectId.Equals(loggedInUser.ObjectIdentifier) == false)
+                {
+                    isDirty = true;
+                    loggedInUser.ObjectIdentifier = objectId;
+                }
+                if (firstName.Equals(loggedInUser.FirstName) == false)
+                {
+                    isDirty = true;
+                    loggedInUser.FirstName = firstName;
+                }
+                if (lastName.Equals(loggedInUser.LastName) == false)
+                {
+                    isDirty = true;
+                    loggedInUser.LastName = lastName;
+                }
+                if (displayName.Equals(loggedInUser.DisplayName) == false)
+                {
+                    isDirty = true;
+                    loggedInUser.DisplayName = displayName;
+                }
+                if (email.Equals(loggedInUser.EmailAddress) == false)
+                {
+                    isDirty = true;
+                    loggedInUser.EmailAddress = email;
+                }
+                if (isDirty)
+                {
+                    if (string.IsNullOrWhiteSpace(loggedInUser.Id))
+                    {
+                        await UserData.CreateUser(loggedInUser);
+                    }
+                    else
+                    {
+                        await UserData.UpdateUser(loggedInUser);
+                    }
+                }
+            }
         }
         /// <summary>
         /// Runs after the page is rendered
@@ -158,6 +207,32 @@ namespace SuggestionAppUI.Components.Pages
             selectedStatus = status;
             await FilterSuggestions();
         }
+         private async Task VoteUp(SuggestionModel suggestion)
+        {
+            if (loggedInUser is not null)
+            {
+                if(suggestion.Author.Id == loggedInUser.Id)
+                {
+                    //Can't vote on your own suggestion
+                    return;
+                }
+                if(suggestion.UserVotes.Add(loggedInUser.Id) == false)
+                {
+                    suggestion.UserVotes.Remove(loggedInUser.Id);
+                }
+                await SuggestionData.UpvoteSuggestion(suggestion.Id, loggedInUser.Id);
+
+                if(isSortedByNew == false)
+                {
+                    suggestions = suggestions.OrderByDescending(s => s.UserVotes.Count).ThenByDescending(s => s.DateCreated).ToList();
+                }
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+            }
+        }
+
         /// <summary>
         /// Click to upvote when there are no upvotes or show the two digit number of upvotes if they exist.
         /// </summary>
@@ -171,7 +246,14 @@ namespace SuggestionAppUI.Components.Pages
             }
             else
             {
-                return "Click To";
+                if(suggestion.Author.Id == loggedInUser?.Id)
+                {
+                    return "Awaiting";
+                }
+                else
+                {
+                    return "Click To";
+                }
             }
         }
 
