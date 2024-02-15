@@ -32,6 +32,18 @@ namespace SuggestionAppUI.Components.Pages
             await LoadAndVerifyUser();
         }
 
+        private void LoadCreatePage()
+        {
+            if(loggedInUser is not null)
+            {
+                NavigationManager.NavigateTo("/Create");
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+            }
+        }
+
         private async Task LoadAndVerifyUser()
         {
             var authState = await authProvider.GetAuthenticationStateAsync();
@@ -281,6 +293,75 @@ namespace SuggestionAppUI.Components.Pages
         private void OpenDetails(SuggestionModel suggestion)
         {
             NavigationManager.NavigateTo($"/Details/{suggestion.Id}");
+        }
+
+        private string sortedByNewClass(bool isNew)
+        {
+            if(isNew == isSortedByNew)
+            {
+                return "sort-selected";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        private string GetVoteClass(SuggestionModel suggestion)
+        {
+            if(suggestion.UserVotes is null || suggestion.UserVotes.Count == 0)
+            {
+                return "suggestion-entry-no-votes";
+            }
+            else if(suggestion.UserVotes.Contains(loggedInUser?.Id))
+            {
+                return "suggestion-entry-voted";
+            }
+            else
+            {
+                return "suggestion-entry-not-voted";
+            }
+        }
+
+        private string GetSuggestionStatusClass(SuggestionModel suggestion)
+        {
+            if(suggestion is null || suggestion.SuggestionStatus is null)
+            {
+                return "suggestion-entry-status-none";
+            }
+            string output = suggestion.SuggestionStatus.StatusName switch
+            {
+                "Completed" => "suggestion-entry-status-completed",
+                "Watching" => "suggestion-entry-status-watching",
+                "Upcoming" => "suggestion-entry-status-upcoming",
+                "Dismissed" => "suggestion-entry-status-dismissed",
+                _ => "suggestion-entry-status-none",
+            };
+            return output;
+        }
+
+        private string GetSelectedCategory(string category = "All")
+        {
+            if(category == selectedCategory)
+            {
+                return "selected-category";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        private string GetSelectedStatus(string status = "All")
+        {
+            if (status == selectedStatus)
+            {
+                return "selected-status";
+            }
+            else
+            {
+                return "";
+            }
         }
     }
 }
