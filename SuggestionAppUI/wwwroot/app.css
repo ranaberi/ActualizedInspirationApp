@@ -23,9 +23,13 @@ h1{
     padding-top: 1rem;
 }
 a, .btn-link {
-    color: #006bb7;
+    color: white;
+    text-decoration: none;
 }
-
+a:hover, .btn-link:hover{
+    color: white;
+    text-decoration: underline;
+}
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;
@@ -251,4 +255,77 @@ selected-status {
     font-size: 0.8rem;
     letter-spacing: 1.2px;
 
+}
+.nav-links{
+    display: flex;
+    rtext-align: center;
+    justify-content: flex-end;
+}
+.login-link{
+    padding-left: 1rem;
+
+}
+.form-layout{
+    background-color: white;
+    border-radius: 15px;
+    padding: 2rem;
+}
+.form-layout a{
+    font-weight: 700;
+    color:burlywood;
+}
+.form-layout a:hover {
+        font-weight: 700;
+        color: burlywood;
+        text-decoration: underline;
+}
+.close-button-section{
+    display: flex;
+    justify-content: flex-end;
+}
+.input-sectio{
+    margin-bottom: 2rem;
+}
+.input-description{
+    margin-bottom: 0.5rem;
+}
+.radio-item-group input[type= "radio"]{
+    display: none;
+}
+.radio-iten-group lable{
+    border-color: darkgoldenrod;
+    border-width: 1px;
+    padding: 0.3rem 1.5rem;
+    border-radius: 10px;
+    width: 100%;
+    border-style: solid;
+}
+.radio-item-group input[type= "radio"]:checked + lable {
+    background-color: darkgoldenrod;
+    color: white;
+    width: 100%;
+    border: 1px darkgoldenrod solid;
+}
+.radio-item-group {
+    margin: 0.5rem;
+}
+.center-children{
+    display: flex;
+    justify-content: center;
+}
+.btn-main{
+    color: white;
+    background-color: darkgoldenrod;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    font-family: 'Montserrat', sans-serif;
+    font-family: 900;
+    border-radius: 10px;
+    border-width: 3px;
+}
+.btn-main:hover{
+    color: darkgoldenrod;
+    border-color: darkgoldenrod;
+    background-color: white;
+    border-width: 3px;
 }
