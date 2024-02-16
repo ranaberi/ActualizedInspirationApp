@@ -90,3 +90,165 @@ h1:focus {
     background-color: white;
     border-color: white;
 }
+.suggestion-count{
+    font-family:'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+}
+.btn-order{
+    background-color: white;
+    border: 0px solid #ff6a00;
+    border-radius: 10px;
+}
+.btn:focus,
+.form-control:focus{
+    box-shadow: none;
+}
+.sort-selected{
+    background-color: #ff6a00;
+    color: white;
+    font-weight: 700;
+}
+.sort-selected:hover{
+    color:white;
+}
+.search-box{
+    --bs-gutter-x: 3.5rem;
+}
+.rounded-control{
+    border-radius:10px;
+}
+.categories{
+    margin: 1rem;
+    background-color: white;
+    barder-radius:10px;
+    padding: 1rem;
+}
+.categories div{
+    margin-top: 1rem;
+}
+.categories div:hover{
+    cursor: pointer;
+}
+selected-category{
+    font-weight: 700;
+}
+.statuses {
+    margin: 1rem;
+    background-color: white;
+    barder-radius: 10px;
+    padding: 1rem;
+}
+
+    .statuses div {
+        margin-top: 1rem;
+    }
+
+        .statuses div:hover {
+            cursor: pointer;
+        }
+
+selected-status {
+    font-weight: 700;
+}
+.suggestion-entry{
+    display: grid;
+    grid-template-columns: 142px 1fr 45px;
+    border-radius: 20px;
+    margin: 20px 0;
+    box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+}
+.suggestion-entry-no-votes,
+.suggestion-entry-voted,
+.suggestion-entry-not-votes{
+    text-align: center;
+    border-right: 3px #ff6a00 solid;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    background-color:burlywood;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    font-family: Monsterrat, sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    min-height: 142px;
+    cursor: pointer;
+}
+.suggestion-entry-no-votes{
+    background-color: #ff6a00;
+    color: white;
+    border-color: #ff6a00;
+}
+.suggestion-entry-voted{
+    background-color: burlywood;
+    color: white;
+}
+.suggestion-entry-not-voted{
+    background-color: white;
+    color: burlywood;
+}
+.suggestion-entry-text{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    padding-left: 20px;
+    background-color: white;
+}
+.suggestion-entry-text-title{
+    flex-grow:1;
+    padding-top: 10px;
+}
+.suggestion-entry-text-category{
+    text-transform: uppercase;
+    color: darkgoldenrod;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+}
+.suggestion-entry-status{
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
+    display: flex;
+    padding-top: 1rem;
+    padding-left: 0.2rem;
+    padding-bottom: 1rem;
+    padding-right: 1rem;
+}
+
+.suggestion-entry-status-completed{
+    background-color:coral; 
+    border: 1px coral solid;
+}
+.suggestion-entry-status-watching {
+    background-color: darkkhaki;
+    border: 1px darkkhaki solid;
+}
+.suggestion-entry-status-upcoming {
+    background-color: bisque;
+    border: 1px bisque solid;
+}
+.suggestion-entry-status-dismissed {
+    background-color: darksalmon;
+    border: 1px darksalmon solid;
+}
+.suggestion-entry-status-none {
+    background-color: white;
+    border: 1px white solid;
+}
+.suggestion-entry-status-text{
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    line-height: 1.75;
+    font-weight: bold;
+    font-size: 0.8rem;
+    letter-spacing: 1.2px;
+
+}
