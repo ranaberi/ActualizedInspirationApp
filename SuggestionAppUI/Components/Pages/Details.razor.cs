@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using SuggestionAppLibrary.DataAccess;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,10 +15,61 @@ namespace SuggestionAppUI.Components.Pages
         private SuggestionModel suggestion;
         private UserModel loggedInUser;
 
+        private List<StatusModel> statuses;
+        private string settingStatus = "";
+        private string urlText = "";
+
+
         protected async override Task OnInitializedAsync()
         {
             suggestion = await suggestionData.GetSuggestion(Id);
             loggedInUser = await authProvider.GetUserFromAuth(UserData);
+            statuses = await statusData.GetAllStatuses();
+
+        }
+
+        private async Task CompleteSetStatus()
+        {
+            switch (settingStatus)
+            {
+                case "completed":
+                    if (string.IsNullOrWhiteSpace(urlText))
+                    {
+                        return;
+                    }
+                    suggestion.SuggestionStatus = statuses.Where(s => s.StatusName.ToLower() == settingStatus.ToLower()).First();
+                    suggestion.OwnerNotes = $"This is an inspiring suggestion. You can find a related one here: <a href='{urlText}' target='_blank'> {urlText} </a>";
+                    break;
+
+                case "watching":
+                    if (string.IsNullOrWhiteSpace(urlText))
+                    {
+                        return;
+                    }
+                    suggestion.SuggestionStatus = statuses.Where(s => s.StatusName.ToLower() == settingStatus.ToLower()).First();
+                    suggestion.OwnerNotes = $"We noticed the interest this suggestion is getting! If more people are interested we will address the next steps to realise it.";
+                    break;
+                case "upcoming":
+                    if (string.IsNullOrWhiteSpace(urlText))
+                    {
+                        return;
+                    }
+                    suggestion.SuggestionStatus = statuses.Where(s => s.StatusName.ToLower() == settingStatus.ToLower()).First();
+                    suggestion.OwnerNotes = $"Great suggestion! We have a group formed to address this topic";
+                    break;
+                case "dismissed":
+                    if (string.IsNullOrWhiteSpace(urlText))
+                    {
+                        return;
+                    }
+                    suggestion.SuggestionStatus = statuses.Where(s => s.StatusName.ToLower() == settingStatus.ToLower()).First();
+                    suggestion.OwnerNotes = $"Sometimes a good idea doesn't fit within our scope and vision. This is one of those ideas.";
+                    break;
+                default:
+                    return;
+            }
+            settingStatus = null;
+            await suggestionData.UpdateSuggestion(suggestion);
         }
         private void ClosePage()
         {

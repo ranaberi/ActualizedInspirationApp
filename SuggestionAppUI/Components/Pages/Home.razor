@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
 @inject ICategoryData CategoryData
 @inject IUserData UserData
 @inject IStatusData StatusData
@@ -25,6 +26,44 @@
         @*OnSearchInput will be called everytime a character is typed*@
         <input type="text" placeholder="Search" aria-label="Search box" class="form-control rounded-control" @oninput="((txt)=> OnSearchInput((string)txt.Value))"/>
     </div>
+    <div class="col-12 d-block d-md-none">
+        @if(categories is not null && showCategories)
+        {
+            <div class="categories">
+                <span class="text-uppercase fw-bold">Category</span>
+                <div class="@GetSelectedCategory()" @onclick="(() => OnCategoryClick())">All</div>
+                @foreach(var c in categories)
+                {
+                    <div class="@GetSelectedCategory(c.CategoryName)" @onclick="(() => OnCategoryClick(c.CategoryName))">@c.CategoryName</div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="categories" @onclick="(() => showCategories = true)">
+                <span class="selected-category">@selectedCategory</span>
+
+            </div>
+        }
+        @if(statuses is not null && showStatus)
+        {
+            <div class="statuses">
+                <span class="text-uppercase fw-bold">Status</span>
+                <div class="@GetSelectedStatus()" @onclick="(() => OnStatusClick())">All</div>
+                @foreach (var s in statuses)
+                {
+                    <div class="@GetSelectedStatus(s.StatusName)" @onclick="(() => OnStatusClick(s.StatusName))">@s.StatusName</div>
+                }
+            </div>
+        }
+        else
+        {
+            
+        }
+        <div class="statuses" @onclick="(() => showStatus = true)">
+            <span class="selected-status">@selectedStatus</span>
+        </div>
+    </div>
 </div>
 
 <div class="row">
@@ -42,9 +81,28 @@
                 </div>
                 <div class="suggestion-entry-class">
                     <div class="suggestion-entry-text-title" @onclick="(()=> OpenDetails(s))">@s.Suggestion</div>
-                    <div>
-                        <div class="suggestion-entry-text-category" @onclick="(()=> OpenDetails(s))">@s.Category?.CategoryName</div>
-                    </div>
+                        @if(archivingSuggestion is null || archivingSuggestion.Id != s.Id)
+                        {
+                            <div class="suggestion-entry-bottom">
+                               
+                                    <div class="suggestion-entry-text-category" @onclick="(()=> OpenDetails(s))">@s.Category?.CategoryName</div>
+                                    <AuthorizeView Policy="Admin">
+                                        <button @onclick="(() => archivingSuggestion =s)" class="btn suggestion-entry-text-category btn-archive">
+                                            archive
+                                        </button>
+                                    </AuthorizeView>
+                                
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="suggestion-entry-bottom">
+                                <button class="btn btn-archive btn-archive-confirm" @onclick="ArchiveSuggestion"> Confirm</button>
+                                <button class="btn btn-archive btn-archive-reject" @onclick="(() => archivingSuggestion = null)"> Cancel</button>
+                            </div>
+                        }
+
+                        
                 </div>
                 <div class="suggestion-entry-status" @GetSuggestionStatusClass(s)>
                     <div class="suggestion-entry-status-text">@s.SuggestionStatus?.StatusName</div>
@@ -53,7 +111,7 @@
             </Virtualize>
         }
     </div>
-    <div class="col-md-4 col-xl-3">
+    <div class="col-md-4 col-xl-3 d-none d-md-block">
         @if(categories is not null)
         {
             <div class="categories">

@@ -14,11 +14,16 @@ namespace SuggestionAppUI.Components.Pages
         private List<SuggestionModel> suggestions;
         private List<CategoryModel> categories;
         private List<StatusModel> statuses;
+        private SuggestionModel archivingSuggestion;
 
         private string selectedCategory = "All";
         private string selectedStatus = "All";
         private string searchText = "";
-        bool isSortedByNew = true;
+        private bool isSortedByNew = true;
+        private bool showCategories = false;
+        private bool showStatus = false;
+
+
 
 
         /// <summary>
@@ -32,6 +37,14 @@ namespace SuggestionAppUI.Components.Pages
             await LoadAndVerifyUser();
         }
 
+        private async Task ArchiveSuggestion()
+        {
+            archivingSuggestion.Archived = true;
+            await SuggestionData.UpdateSuggestion(archivingSuggestion);
+            suggestions.Remove(archivingSuggestion);
+            archivingSuggestion = null;
+            //await FilterSuggestions();
+        }
         private void LoadCreatePage()
         {
             if(loggedInUser is not null)
@@ -211,12 +224,14 @@ namespace SuggestionAppUI.Components.Pages
         private async Task OnCategoryClick(string category = "All")
         {
             selectedCategory = category;
+            showCategories = false;
             await FilterSuggestions();
         }
 
         private async Task OnStatusClick(string status = "All")
         {
             selectedStatus = status;
+            showStatus = false;
             await FilterSuggestions();
         }
          private async Task VoteUp(SuggestionModel suggestion)
