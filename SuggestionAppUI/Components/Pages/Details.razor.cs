@@ -83,5 +83,37 @@ namespace SuggestionAppUI.Components.Pages
                 NavigationManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
             }
         }
+        private string GetVoteClass()
+        {
+            if (suggestion.UserVotes is null || suggestion.UserVotes.Count == 0)
+            {
+                return "suggestion-detail-no-votes";
+            }
+            else if (suggestion.UserVotes.Contains(loggedInUser?.Id))
+            {
+                return "suggestion-detail-voted";
+            }
+            else
+            {
+                return "suggestion-detail-not-voted";
+            }
+        }
+
+        private string GetStatusClass()
+        {
+            if (suggestion is null || suggestion.SuggestionStatus is null)
+            {
+                return "suggestion-detail-status-none";
+            }
+            string output = suggestion.SuggestionStatus.StatusName switch
+            {
+                "Completed" => "suggestion-detail-status-completed",
+                "Watching" => "suggestion-detail-status-watching",
+                "Upcoming" => "suggestion-detail-status-upcoming",
+                "Dismissed" => "suggestion-detail-status-dismissed",
+                _ => "suggestion-detail-status-none",
+            };
+            return output;
+        }
     }
 }

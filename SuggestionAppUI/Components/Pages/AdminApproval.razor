@@ -7,12 +7,12 @@
 
 @*Here admins can approve or reject the new suggestions*@
 
-<h1>Pending Submissions</h1>
+<h1 class="page-heading text-uppercase mb-4">Pending Submissions</h1>
 
-<div>
-    <div>@submissions?.Count Submissions</div>
-    <div>
-        <button @onclick="ClosePage"></button>
+<div class="row">
+    <div class="suggestion-count col-8 mt-2">@submissions?.Count Submissions</div>
+    <div class="col-4 close-button-section">
+        <button class="btn btn-close" @onclick="ClosePage"></button>
     </div>
 </div>
 
@@ -20,22 +20,22 @@
 {
     foreach(var s in submissions)
     {
-        <div>
-            <div>
-                <button @onclick= "(()=> ApproveSubmission(s))">Approve</button>
-                <button @onclick="(()=> RejectSubmission(s))">Reject</button>
+        <div class="row submission">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <button class="btn btn-approve" @onclick= "(()=> ApproveSubmission(s))">Approve</button>
+                <button class="btn btn-reject" @onclick="(()=> RejectSubmission(s))">Reject</button>
             </div>
             <div>
-                <div>
+                <div class="col-lg-10 col-md-9 col-sm-8">
                     @if (currentEditingTitle == s.Id)
                     {
-                        <EditForm Model="@editedTitle" OnSubmit="(() => SaveTitle(s))">
-                            <InputText @bind-Value="editedTitle"/>
-                            <button type="submit">
-                                <span class="fas fa-check-double"></span>
+                        <EditForm class="approval-edit-form" Model="@editedTitle" OnSubmit="(() => SaveTitle(s))">
+                            <InputText class="form-control approval-edit-field" @bind-Value="editedTitle"/>
+                            <button class="btn" type="submit">
+                                <span class="fas fa-check-double submission-edit-approve"></span>
                             </button>
                             <button @onclick="(()=> currentEditingTitle = string.Empty) " type="reset">
-                                <span class="fas fa-lightbulb"></span>
+                                <span class="fas fa-lightbulb submission-edit-reject"></span>
                             </button>
                             
                         </EditForm>
@@ -43,7 +43,7 @@
                     else
                     {
                         @s.Suggestion
-                        <span class="fas fa-pen" @onclick="() => EditTitle(s)"></span>
+                        <span class="fas fa-pen suggestion-edit-icon" @onclick="() => EditTitle(s)"></span>
                         
                     }
                 </div>
@@ -56,13 +56,13 @@
                 <div>
                     @if(currentEditingDescription == s.Id)
                     {
-                        <EditForm Model="@editedDescription" OnSubmit="(() => SaveDescription(s))">
-                            <InputText @bind-Value="editedDescription"/>
-                            <button type="submit">
-                                <span class="fas fa-pen"></span>
+                        <EditForm class="approval-edit-form" Model="@editedDescription" OnSubmit="(() => SaveDescription(s))">
+                            <InputText class="form-control approval-edit-field" @bind-Value="editedDescription"/>
+                            <button class="btn" type="submit">
+                                <span class="fas fa-check-double submission-edit-approve"></span>
                             </button>
-                            <button @onclick="(() => currentEditingDescription = string.Empty)">
-                                <span class="fas fa-check-double"></span>
+                            <button type="button" class="btn" @onclick="(() => currentEditingDescription = string.Empty)">
+                                <span class="fas fa-lightbulb submission-edit-reject"></span>
 
                             </button>
                         </EditForm>
@@ -70,7 +70,7 @@
                     else
                     {
                         @s.Description
-                        <span class="fas fa-pen" @onclick="() => EditDescription(s)"></span>
+                        <span class="fas fa-pen submission-edit-icon" @onclick="() => EditDescription(s)"></span>
                     }
                 </div>
             </div>
